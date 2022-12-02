@@ -35,10 +35,12 @@ class MessageImageComponent extends Component {
     if (this.state.mediaUrl) {
       return (
         <BubbleMessageWrapperDiv>
+          <p style={{padding:5}}>{message?.attributes?.body}</p>
           <MediaMessageComponent
             mediaUrl={this.state.mediaUrl}
             mediaType={message.media && message.media.contentType}
           />
+         
         </BubbleMessageWrapperDiv>
       );
     } else if (

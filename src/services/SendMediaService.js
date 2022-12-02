@@ -15,10 +15,13 @@ class SendMediaService {
             channel.once('messageAdded', async (msg) => {
                 const { media, memberSid } = msg;
                 const loggedMember = members.get(memberSid);
+                const {sid:mediaSid} = media;
+               const {inputText} = this.manager.store.getState().flex.chat.channels[channelSid];
+             
 
                 if (memberSid === loggedMember.sid && media) {
                     const mediaUrl = await media.getContentUrl();
-                    await this.sendMediaMessage(mediaUrl, channelDefinition, task);
+                    await this.sendMediaMessage(mediaUrl, channelDefinition, task,channelSid,mediaSid,inputText);
                 }
             });
 
@@ -32,13 +35,16 @@ class SendMediaService {
         }
     }
 
-    async sendMediaMessage(mediaUrl, channelDefinition, task) {
+    async sendMediaMessage(mediaUrl, channelDefinition, task, channelSid, mediaSid,inputText) {
         const { name: to } = task.attributes;
 
         const body = {
             mediaUrl,
             to,
             channel: channelDefinition.name,
+            channelSid,
+            mediaSid,
+            messageBody:inputText,
             Token: this.manager.store.getState().flex.session.ssoTokenPayload.token,
         };
 
